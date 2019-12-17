@@ -12,7 +12,7 @@ def main(stdscr):
     curses.curs_set(0)
 
     SLEEP_TIME = 1./30.0
-    
+
     # Context for whole application
     global_context = GlobalContext()
     global_context.main_screen = Screen(stdscr)

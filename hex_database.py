@@ -1,16 +1,12 @@
 import os.path
 import sqlite3
 
-class DataPlayer:
-    def __init__(self, id, nick, real_name, elo):
-        self.id = id
-        self.nick = nick
-        self.real_name = real_name
-        self.elo = elo
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
 
-    @classmethod
-    def factory(cls, cursor, row):
-        return cls(*row)
 
 class HexDatabase:
     def __init__(self):
@@ -66,7 +62,7 @@ class HexDatabase:
     # Interface
     def get_players(self):
         conn = self._connection
-        conn.row_factory = DataPlayer.factory
+        conn.row_factory = dict_factory
 
         cur = conn.cursor()
         cur.execute('''SELECT * FROM players''')

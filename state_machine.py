@@ -1,6 +1,7 @@
 from state_main import StateMain
 from state_setup import StateSetup
 from state_input import StateInput
+from state_show_players import StateShowPlayers
 
 class StateMachine:
     def __init__(self, context):
@@ -12,7 +13,8 @@ class StateMachine:
         self._state_builders = {
             'MAIN': StateMain,
             'SETUP': StateSetup,
-            'INPUT': StateInput
+            'INPUT': StateInput,
+            'SHOW_PLAYERS': StateShowPlayers
         }
 
     # Others

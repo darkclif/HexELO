@@ -39,7 +39,7 @@ class StateMain(State):
         pass
 
     def on_show_players(self, data):
-        pass
+        self._context.state_machine.req_push_state('SHOW_PLAYERS')
 
     def on_quit(self, data):
         self.pop_this_state()

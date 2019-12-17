@@ -1,6 +1,6 @@
 from state import State
 from menu import Menu
-from hex_database import HexDatabase, DataPlayer
+from hex_database import HexDatabase
 
 
 class StateSetup(State):
