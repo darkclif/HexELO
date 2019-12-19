@@ -1,7 +1,9 @@
-from state_main import StateMain
-from state_setup import StateSetup
-from state_input import StateInput
-from state_show_players import StateShowPlayers
+from states.state_main import StateMain
+from states.state_setup import StateSetup
+from states.state_input import StateInput
+from states.state_show_players import StateShowPlayers
+from states.state_dialog import StateDialog
+
 
 class StateMachine:
     def __init__(self, context):
@@ -14,7 +16,8 @@ class StateMachine:
             'MAIN': StateMain,
             'SETUP': StateSetup,
             'INPUT': StateInput,
-            'SHOW_PLAYERS': StateShowPlayers
+            'SHOW_PLAYERS': StateShowPlayers,
+            'DIALOG': StateDialog
         }
 
     # Others

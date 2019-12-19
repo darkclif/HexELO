@@ -60,6 +60,8 @@ class HexDatabase:
         conn.commit()
 
     # Interface
+
+    ################################# PLAYERS
     def get_players(self):
         conn = self._connection
         conn.row_factory = dict_factory
@@ -69,4 +71,20 @@ class HexDatabase:
 
         return [row for row in cur]
 
-        
+    def delete_player(self, player_id):
+        conn = self._connection
+
+        conn.execute('''DELETE FROM players WHERE id = ?''', (player_id,))
+        conn.commit()
+
+        return True
+
+    def add_player(self, player):
+        # player = [nick, real_name]
+        conn = self._connection
+
+        new_id = list(conn.execute('''SELECT MAX(id) as max_id FROM players'''))[0]['max_id'] + 1
+        conn.execute('''INSERT INTO players VALUES (?, ?, ?, ?)''', (new_id, player[0], player[1], 1000))
+        conn.commit()
+
+        return True

@@ -31,10 +31,8 @@ def main(stdscr):
         # Input
         key = stdscr.getch()
         if key != -1:
-            if key == 27:
-                gClose = True
-            else:
-                state_machine.on_input(key)
+            # print(key)
+            state_machine.on_input(key)
 
         # Update
         state_machine.on_update(SLEEP_TIME)

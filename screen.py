@@ -27,7 +27,10 @@ class Screen:
         # Create buffers
         self._old_buffer = [[Pixel() for _ in range(self._cols)] for _ in range(self._rows)]
         self._new_buffer = [[Pixel() for _ in range(self._cols)] for _ in range(self._rows)]
-        
+    
+    def get_maxsize(self):
+        return (self._rows, self._cols)
+
     def put_string(self, i, j, string, color = COLOR_DEFAULT):
         tmp_i = i % self._rows
         for k, c in enumerate(string):
