@@ -1,6 +1,7 @@
 from states.state import State
 from menus.menu_table import MenuTable
 from menus.menu_toolbar import MenuToolbar
+from menus.menu_input_entry import MenuInputEntry
 from states.state_dialog import StateDialog
 
 
@@ -26,10 +27,7 @@ class StateShowPlayers(State):
     # Helpers
     def spawn_menu_table(self):
         columns = [('ID', 3), ('Nick', 12), ('Real name', 20), ('ELO', 6)]
-        data = []
-        for p in self._context.database.get_players():
-            player_data = ( p['id'], list(p.values()) )
-            data.append(player_data)
+        data = self._context.database.get_players()
 
         self._menu = MenuTable(columns, data)
         self._menu.set_position(0, 0)
@@ -53,18 +51,34 @@ class StateShowPlayers(State):
         pass
 
     def on_player_add(self):
-        layout = [
-            ['Nick'],
-            ['Real name']
-        ]
-
-        self._context.state_machine.req_push_state('INPUT', 'Add new player', layout, self.add_player)
+        layout = {
+            'title': 'Add new player', 
+            'inputs':[
+                MenuInputEntry('Nick'),
+                MenuInputEntry('Real name'),
+            ]
+        }
+        self._context.state_machine.req_push_state('INPUT', layout, self.add_player)
 
     def on_player_delete(self):
-        self._context.state_machine.req_push_state('DIALOG', 'Are you sure?', StateDialog.OPTION_OK_CANCEL, self.delete_player)
+        layout = {
+            'title': 'Are you sure?',
+            'options': StateDialog.OPTION_OK_CANCEL
+        }
+        self._context.state_machine.req_push_state('DIALOG', layout, self.delete_player)
 
     def on_player_edit(self):
-        pass
+        data = self._menu.get_current_data()
+        layout = {
+            'title': 'Edit player', 
+            'inputs':[
+                MenuInputEntry('ID', value=data['id'], edit=False),
+                MenuInputEntry('Nick', value=data['nick']),
+                MenuInputEntry('Real name', value=data['real_name']),
+                MenuInputEntry('ELO', MenuInputEntry.MODE_NUMBER, value=data['elo']),
+            ]
+        }
+        self._context.state_machine.req_push_state('INPUT', layout, self.edit_player)
 
     def on_exit(self):
         self.pop_this_state()
@@ -72,10 +86,14 @@ class StateShowPlayers(State):
     # Execute actions
     def delete_player(self, option):
         if option & StateDialog.OPTION_OK:
-            player_id = self._menu.get_current_data()
+            player_id = self._menu.get_current_data()['id']
             self._context.database.delete_player(player_id)
             self.spawn_menu_table()
 
     def add_player(self, data):
         self._context.database.add_player(data)
+        self.spawn_menu_table()
+
+    def edit_player(self, data):
+        self._context.database.edit_player(data)
         self.spawn_menu_table()

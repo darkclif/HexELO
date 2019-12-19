@@ -1,6 +1,7 @@
 import itertools
 from menus.menu_entry import MenuEntry
 from key_codes import KeyCodes
+from screen import Screen
 
 
 class Menu:
@@ -38,11 +39,11 @@ class Menu:
 
     def on_render(self, screen):
         for i, item in enumerate(self._entries):
-            selection = ' '
+            color = Screen.COLOR_DEFAULT
             if self._curr_entry == i:
-                selection = '>'
+                color = Screen.COLOR_INVERTED
 
-            screen.put_string(self._pos[0] + i, self._pos[1] + 0, selection + item.get_string())
+            screen.put_string(self._pos[0] + i, self._pos[1] + 0, item.get_string(), color)
 
     def __inc_curr(self):
         self._curr_entry -= 1

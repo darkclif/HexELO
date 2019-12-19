@@ -9,7 +9,7 @@ class StateSetup(State):
 
         players = context.database.get_players()
 
-        self._menu = Menu((2,2))
+        self._menu = Menu()
         self._menu.add_entry("Show ranking", self.on_show_ranking)
 
         for p in players:

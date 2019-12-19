@@ -88,3 +88,12 @@ class HexDatabase:
         conn.commit()
 
         return True
+
+    def edit_player(self, player):
+        # player = [id, nick, real_name, elo]
+        conn = self._connection
+
+        conn.execute('''UPDATE players SET nick=?, real_name=?, elo=? WHERE id=?''', (player[1], player[2], player[3], player[0]))
+        conn.commit()
+
+        return True

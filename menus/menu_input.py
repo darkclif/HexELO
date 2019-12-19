@@ -2,6 +2,7 @@ import itertools
 from menus.menu_input_entry import MenuInputEntry
 from menus.menu_entry import MenuEntry
 from key_codes import KeyCodes
+from screen import Screen
 
 
 class MenuInput:
@@ -10,12 +11,15 @@ class MenuInput:
     ACTION_DOWN    = KeyCodes.ARROW_DOWN
     ACTION_SELECT  = KeyCodes.RETURN
 
-    def __init__(self, layout):
+    def __init__(self, layout, max_size):
+        # layout = [
+        #   MenuInputEntry(...),
+        #   ...
+        # ]
         self._pos = (0, 0)      # unlimited
-        self._max_size = (0, 0) # unlimited
+        self._max_size = max_size
 
         self._entries = []
-        self._input_entries = []
         self._curr_entry = 0
         
         self.__spawn_layout(layout)
@@ -28,7 +32,7 @@ class MenuInput:
         self._max_size = (rows, cols)
 
     def get_input_data(self):
-        return [ entry.input for entry in self._input_entries]
+        return [ entry.input for entry in self._entries]
 
     # Base
     def on_input(self, key_code):
@@ -43,19 +47,18 @@ class MenuInput:
 
     def on_render(self, screen):
         for i, item in enumerate(self._entries):
-            selection = ' '
+            color = Screen.COLOR_DEFAULT
             if self._curr_entry == i:
-                selection = '>'
+                color = Screen.COLOR_INVERTED
 
-            screen.put_string(self._pos[0] + i, self._pos[1] + 0, selection + item.get_string())
+            screen.put_string(self._pos[0] + i, self._pos[1] + 2, item.get_string(), color)
 
     # Internal
     def __spawn_layout(self, layout):
         # Data layout
         for entry in layout:
-            new_entry = MenuInputEntry(*entry)
-            self._input_entries.append(new_entry)
-            self._entries.append(new_entry)
+            entry.set_length(self._max_size[1] - 4)
+            self._entries.append(entry)
 
     def __inc_curr(self):
         self._curr_entry -= 1
